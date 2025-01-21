@@ -1,7 +1,7 @@
 Openssl Encrypter for Yii2
 ======================
 Openssl Encrypter for Yii2
-Version 1.1.0
+Version 1.1.1
 
 This extension is used for two-way encryption.
 The cypher method used is **AES**, and you can either use the **128 bites** or **256 bites** encryption.
@@ -19,13 +19,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist nickcv/yii2-encrypter "*"
+php composer.phar require --prefer-dist aditiyass/yii2-encrypter "*"
 ```
 
 or add
 
 ```
-"nickcv/yii2-encrypter": "*"
+"aditiyass/yii2-encrypter": "*"
 ```
 
 to the require section of your `composer.json` file.

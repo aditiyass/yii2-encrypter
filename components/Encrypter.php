@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contains the component used for encrypting and decrypting data.
  * 
@@ -21,7 +22,7 @@ use yii\base\InvalidConfigException;
  * @version 1.0
  */
 class Encrypter extends Component
-{    
+{
     /**
      * 128 bites cypher method used by the openssl functions.
      */
@@ -29,12 +30,12 @@ class Encrypter extends Component
     /**
      * 256 bites cypher method used by the openssl functions.
      */
-	const AES256 = 'aes-256-cbc';
+    const AES256 = 'aes-256-cbc';
     /**
      * Size in bites of the IV required by the cypher methods.
      */
     const IV_LENGTH = 16;
-    
+
     /**
      * Contains the global password used to encrypt and decrypt.
      * 
@@ -61,7 +62,7 @@ class Encrypter extends Component
      * @var boolean
      */
     private $_useBase64Encoding = false;
-    
+
     /**
      * Checks that the globalPassword and iv have indeed been set.
      * 
@@ -72,12 +73,12 @@ class Encrypter extends Component
         if (!$this->_globalPassword) {
             throw new InvalidConfigException('"' . get_class($this) . '::globalPassword" cannot be null.');
         }
-        
+
         if (!$this->_iv) {
             throw new InvalidConfigException('"' . get_class($this) . '::iv" cannot be null.');
         }
     }
-    
+
     /**
      * Sets the global password for the encrypter
      * 
@@ -87,7 +88,7 @@ class Encrypter extends Component
     {
         $this->_globalPassword = $this->getPurifiedString($globalPassword, 'globalPassword');
     }
-    
+
     /**
      * Sets the iv for the encrypter
      * 
@@ -95,15 +96,15 @@ class Encrypter extends Component
      */
     public function setIv($iv)
     {
-       $purifiedIV = $this->getPurifiedString($iv, 'iv');
-       
-       if (strlen($purifiedIV) !== self::IV_LENGTH) {
-           throw new InvalidConfigException('"' . get_class($this) . '::iv" should be exactly ' . self::IV_LENGTH . ' bytes long, ' . strlen($purifiedIV) . ' given.');
-       }
-       
-       $this->_iv = $purifiedIV;
+        $purifiedIV = $this->getPurifiedString($iv, 'iv');
+
+        if (strlen($purifiedIV) !== self::IV_LENGTH) {
+            throw new InvalidConfigException('"' . get_class($this) . '::iv" should be exactly ' . self::IV_LENGTH . ' bytes long, ' . strlen($purifiedIV) . ' given.');
+        }
+
+        $this->_iv = $purifiedIV;
     }
-    
+
     /**
      * Sets whether the encrypter should use the 256 bites Cypher method instead
      * of the 128 bites Cypher method.
@@ -113,10 +114,10 @@ class Encrypter extends Component
     public function setUse256BitesEncoding($use256BitesEncoding)
     {
         $this->checkBoolean($use256BitesEncoding, 'use256BitesEncoding');
-        
+
         $this->_use256BitesEncoding = $use256BitesEncoding;
     }
-    
+
     /**
      * Sets whether the encrypter should use base64 encoding after encrypting
      * a string.
@@ -126,10 +127,10 @@ class Encrypter extends Component
     public function setUseBase64Encoding($useBase64Encoding)
     {
         $this->checkBoolean($useBase64Encoding, 'useBase64Encoding');
-        
+
         $this->_useBase64Encoding = $useBase64Encoding;
     }
-    
+
     /**
      * Encrypts a string.
      * 
@@ -139,17 +140,17 @@ class Encrypter extends Component
     public function encrypt($string)
     {
         $encryptedString = openssl_encrypt($string, $this->getCypherMethod(), $this->_globalPassword, true, $this->_iv);
-        
+
         if ($this->_useBase64Encoding) {
-	    is_null($encryptedString){
-	        $encryptedString = "";
-	    }
+            if (is_null($encryptedString)) {
+                $encryptedString = "";
+            }
             $encryptedString = base64_encode($encryptedString);
         }
-        
+
         return $encryptedString;
     }
-    
+
     /**
      * Decrypts a string. 
      * False is returned in case it was not possible to decrypt it.
@@ -160,17 +161,17 @@ class Encrypter extends Component
     public function decrypt($string)
     {
         $decodedString = $string;
-        
+
         if ($this->_useBase64Encoding) {
-	    is_null($decodedString){
-	        $decodedString = "";
-	    }
+            if (is_null($decodedString)) {
+                $decodedString = "";
+            }
             $decodedString = base64_decode($decodedString);
         }
-        
+
         return openssl_decrypt($decodedString, $this->getCypherMethod(), $this->_globalPassword, true, $this->_iv);;
     }
-    
+
     /**
      * Checks whether the value is a string and not empty, returning the trimmed
      * version of it.
@@ -185,16 +186,16 @@ class Encrypter extends Component
         if (!is_string($value)) {
             throw new InvalidConfigException('"' . get_class($this) . '::' . $propertyName . '" should be a string, "' . gettype($value) . '" given.');
         }
-        
+
         $trimmedValue = trim($value);
 
         if (!strlen($trimmedValue) > 0) {
             throw new InvalidConfigException('"' . get_class($this) . '::' . $propertyName . '" length should be greater than 0.');
         }
-        
+
         return $trimmedValue;
     }
-    
+
     /**
      * Checks whether the value is a boolean returning it.
      * 
@@ -208,7 +209,7 @@ class Encrypter extends Component
             throw new InvalidConfigException('"' . get_class($this) . '::' . $propertyName . '" should be a boolean, "' . gettype($value) . '" given.');
         }
     }
-    
+
     /**
      * Returns the cypher method based on the current configuration.
      * 
@@ -219,7 +220,7 @@ class Encrypter extends Component
         if ($this->_use256BitesEncoding) {
             return self::AES256;
         }
-        
+
         return self::AES128;
     }
 }
