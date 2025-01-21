@@ -141,6 +141,9 @@ class Encrypter extends Component
         $encryptedString = openssl_encrypt($string, $this->getCypherMethod(), $this->_globalPassword, true, $this->_iv);
         
         if ($this->_useBase64Encoding) {
+	    is_null($encryptedString){
+	        $encryptedString = "";
+	    }
             $encryptedString = base64_encode($encryptedString);
         }
         
@@ -159,6 +162,9 @@ class Encrypter extends Component
         $decodedString = $string;
         
         if ($this->_useBase64Encoding) {
+	    is_null($decodedString){
+	        $decodedString = "";
+	    }
             $decodedString = base64_decode($decodedString);
         }
         
